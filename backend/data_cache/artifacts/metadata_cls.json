@@ -1,0 +1,49 @@
+{
+  "task": "classification",
+  "feature_cols": [
+    "ret_1",
+    "ret_5",
+    "ret_21",
+    "ret_63",
+    "vol_21",
+    "vol_63",
+    "px_sma20_ratio",
+    "px_sma50_ratio",
+    "px_sma200_ratio",
+    "drawdown_1y",
+    "rsi_14",
+    "macd",
+    "macd_signal",
+    "macd_hist",
+    "atr_14"
+  ],
+  "horizon_days": 21,
+  "pos_threshold": 0.0,
+  "model_name": "hgbc",
+  "metrics": {
+    "accuracy": 0.5842696629213483,
+    "balanced_accuracy": 0.5280566004048939,
+    "precision": 0.6449993879299792,
+    "recall": 0.7493955340634334,
+    "f1": 0.6932894736842106,
+    "auc": 0.5435171442693609,
+    "logloss": 0.8077401653006953
+  },
+  "topk_summary": {
+    "avg_topk_ret": 0.026509407238445658,
+    "avg_universe_ret": 0.026509407238445658,
+    "avg_excess_ret": 0.0,
+    "avg_topk_hit": 0.626984126984127,
+    "avg_univ_hit": 0.626984126984127,
+    "n_periods": 11214
+  },
+  "trained_on_rows": 12075,
+  "tickers": [
+    "AAPL",
+    "AMZN",
+    "GOOGL",
+    "MSFT",
+    "TSLA"
+  ],
+  "timestamp": "2025-09-09T19:03:12.963093Z"
+}

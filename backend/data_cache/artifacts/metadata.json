@@ -1,0 +1,44 @@
+{
+  "feature_cols": [
+    "ret_1",
+    "ret_5",
+    "ret_21",
+    "ret_63",
+    "vol_21",
+    "vol_63",
+    "px_sma20_ratio",
+    "px_sma50_ratio",
+    "px_sma200_ratio",
+    "drawdown_1y",
+    "rsi_14",
+    "macd",
+    "macd_signal",
+    "macd_hist",
+    "atr_14"
+  ],
+  "horizon_days": 21,
+  "model_name": "ridge",
+  "metrics": {
+    "ic_mean": 0.03510378510378508,
+    "ic_std": 0.5431960839012451,
+    "mse": 0.016989065259234215,
+    "rmse": 0.13034210854222902,
+    "mae": 0.08898288439872258,
+    "r2": -0.10119390726637878
+  },
+  "topk_summary": {
+    "avg_topk_return": 0.028913170511112696,
+    "avg_universe_return": 0.028913170511112696,
+    "avg_excess": 0.0,
+    "n_periods": 1638
+  },
+  "trained_on_rows": 12020,
+  "tickers": [
+    "AAPL",
+    "AMZN",
+    "GOOGL",
+    "MSFT",
+    "TSLA"
+  ],
+  "timestamp": "2025-08-23T18:51:30.138205Z"
+}
