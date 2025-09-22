@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FrontFin - Home</title>
+  <link rel="icon" href="img/favicon-frontfin.png" type="image/x-icon">
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+<div class="welcome-card">
+  <main class="container">
+    <section class="intro">
+      <h1>💼 Smart Financial Advisor</h1>
+      <p>Get instant insights tailored to your financial goals.</p>
+      <button id="startBtn" class="primary-btn">Start Now</button>
+      <button id="returnBtn" class="secondary-btn hidden">Return</button>   
+    </section>
+
+    <section id="advisorPanel" class="panel hidden">
+      <h2>📊 Your Financial Snapshot</h2>
+      <form id="advisorForm" class="form">
+        <div class="form-group">
+          <label for="income">Monthly Income (MYR)</label>
+          <input type="number" id="income" placeholder="e.g. 5000" required />
+        </div>
+
+        <div class="form-group">
+          <label for="expenses">Monthly Expenses (MYR)</label>
+          <input type="number" id="expenses" placeholder="e.g. 3000" required />
+        </div>
+
+        <div class="form-group">
+          <label for="riskLevel">Investment Preference</label>
+          <select id="riskLevel">
+            <option value="low">Low Risk</option>
+            <option value="medium">Medium Risk</option>
+            <option value="high">High Risk</option>
+          </select>
+        </div>
+
+        <button type="submit" class="primary-btn">Get Advice</button>
+      </form>
+
+      <div id="results" class="results"></div>
+      <button id="returnBtn" class="secondary-btn hidden">Return</button>
+    </section>
+  </main>
+</div>
+
+  <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FrontFin - Get Started</title>
+    <link rel="icon" href="img/favicon-frontfin.png" type="image/x-icon">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a3e2e 0%, #2d5a3d 10%, #4a7c59 60%, #6b9b7c 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .logo-container {
+            margin-bottom: 50px;
+            text-align: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 15px;
+        }
+
+        .logo-icon {
+            width: 80px;
+            height: 80px;
+            margin-right: 15px;
+            position: relative;
+            background-image: url('img/favicon-frontfin.png');
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+        }
+
+        .logo-text {
+            font-size: 52px;
+            font-weight: bold;
+            color: #ffffff;
+            text-shadow: 0 2px 4px rgba(45, 106, 79, 0.2);
+        }
+
+        .welcome-card {
+            background: white;
+            padding: 60px 50px;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            max-width: 500px;
+            width: 100%;
+            position: relative;
+            backdrop-filter: blur(10px);
+        }
+
+        .welcome-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.8));
+            border-radius: 20px;
+            z-index: -1;
+        }
+
+        .welcome-title {
+            font-size: 36px;
+            color: #1a3e2e;
+            margin-bottom: 40px;
+            font-weight: 900;
+        }
+
+        .start-button {
+            background: linear-gradient(135deg, #2d6a4f, #1b4332);
+            color: white;
+            border: none;
+            padding: 18px 60px;
+            font-size: 18px;
+            font-weight: 600;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 25px rgba(45, 106, 79, 0.3);
+            margin-bottom: 25px;
+            width: 100%;
+            max-width: 350px;
+        }
+
+        .start-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 35px rgba(45, 106, 79, 0.4);
+            background: linear-gradient(135deg, #40916c, #2d6a4f);
+        }
+
+        .start-button:active {
+            transform: translateY(0);
+        }
+
+        .subtitle {
+            color: #666;
+            font-size: 14px;
+            margin-top: 10px;
+            opacity: 0.8;
+        }
+
+        .logout-link {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: #ffffff;
+            text-decoration: none;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            opacity: 0.8;
+        }
+
+        .logout-link:hover {
+            opacity: 1;
+            text-decoration: underline;
+        }
+
+        @media (max-width: 768px) {
+            .welcome-card {
+                padding: 40px 30px;
+                margin: 20px;
+            }
+
+            .logo-text {
+                font-size: 28px;
+            }
+
+            .welcome-title {
+                font-size: 28px;
+            }
+
+            .start-button {
+                padding: 16px 40px;
+                font-size: 16px;
+            }
+        }
+
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: linear-gradient(135deg, #1a3e2e 0%, #2d5a3d 30%, #4a7c59 60%, #6b9b7c 100%);
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            overflow: hidden;
+        }
+
+        .loading-content {
+            text-align: center;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .loading-spinner {
+            width: 60px;
+            height: 60px;
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-top: 4px solid #ffffff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 30px auto;
+        }
+
+        .loading-text {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .loading-subtext {
+            font-size: 16px;
+            opacity: 0.8;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .loading-dots {
+            display: inline-block;
+        }
+
+        .loading-dots::after {
+            content: '';
+            animation: dots 1.5s infinite;
+        }
+
+        @keyframes dots {
+            0%, 20% { content: ''; }
+            40% { content: '.'; }
+            60% { content: '..'; }
+            80%, 100% { content: '...'; }
+        }
+
+        .welcome-card {
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        .logo-container {
+            animation: fadeInUp 0.6s ease-out;
+        }
+    </style>
+</head>
+<body>
+ 
+    <div class="logo-container">
+        <div class="logo">
+            <div class="logo-icon"></div>
+            <span class="logo-text">FrontFin</span>
+        </div>
+    </div>
+
+    <div class="welcome-card">
+        <h1 class="welcome-title">Welcome back!</h1>
+        <button class="start-button" onclick="startSimulation()">Get Started</button>
+        <p class="subtitle">Smart Financial Strategies Tailored Just For You.</p>
+    </div>
+
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-content">
+            <div class="loading-spinner"></div>
+            <div class="loading-text">Setting up your dashboard<span class="loading-dots"></span></div>
+            <div class="loading-subtext">Please wait while we prepare your personalized experience</div>
+        </div>
+    </div>
+
+    <!-- <a href="#" class="logout-link" onclick="logout()">← Logout</a> -->
+
+    <script>
+        // universal helper function
+        function appendParam(key, value, nextPage) {
+            const params = new URLSearchParams(window.location.search);
+            params.set(key, value);
+            window.location.href = `${nextPage}?${params.toString()}`;
+        }
+
+        function startSimulation() {
+            // Show loading overlay
+            const loadingOverlay = document.getElementById('loadingOverlay');
+            loadingOverlay.style.display = 'flex';
+            
+            setTimeout(() => {
+                window.location.href = 'age-input.html';
+            }, 2500); // 2.5 seconds loading time
+        }
+
+        // function logout() {
+        //     // Add your logout logic here
+        //     if (confirm('Are you sure you want to logout?')) {
+        //         alert('Logging out...');
+        //         // Example: window.location.href = '/login';
+        //     }
+        // }
+
+        // Add some interactive hover effects
+        document.querySelectorAll('.circle').forEach((circle, index) => {
+            circle.addEventListener('mouseenter', () => {
+                circle.style.transform = 'scale(1.2)';
+                circle.style.transition = 'transform 0.3s ease';
+            });
+            
+            circle.addEventListener('mouseleave', () => {
+                circle.style.transform = 'scale(1)';
+            });
+        });
+    </script>
+</body>
+</html>

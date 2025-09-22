@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>FrontFin — Results</title>
+  <link rel="icon" href="img/favicon-frontfin.png" type="image/x-icon">
+  <!-- Chart.js (CDN) -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation@3"></script>
+  <style>
+    :root{
+      --bg-grad: linear-gradient(135deg, #1a3e2e 0%, #2d5a3d 10%, #4a7c59 60%, #6b9b7c 100%);
+      --card-bg: #ffffff;
+      --text-dark: #123325;
+      --text-mid: #2b4e3c;
+      --muted: #6b8f80;
+      --success: #1b7f5d;
+      --shadow: 0 18px 50px rgba(0,0,0,.18);
+      --radius-xl: 22px;
+    }
+
+    *{ box-sizing: border-box; }
+    body{
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: var(--bg-grad);
+      min-height: 100vh;
+      color: var(--text-dark);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .page{
+      width: 100%;
+      max-width: 1180px;
+      margin: 40px auto;
+      padding: 0 20px;
+    }
+
+    .title{
+      text-align: center;
+      font-size: clamp(28px, 4vw, 52px);
+      font-weight: 800;
+      color: #fff;
+      text-shadow: 0 2px 4px rgba(45,106,79,.2);
+      margin: 10px 0 28px;
+    }
+
+    .grid{
+      display: grid;
+      grid-template-columns: 1.05fr .95fr;
+      gap: 22px;
+    }
+    @media (max-width: 980px){
+      .grid{ grid-template-columns: 1fr; }
+    }
+
+    .card{
+      background: var(--card-bg);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow);
+      padding: clamp(18px, 2.2vw, 26px);
+    }
+
+    .card h3{
+      margin: 0 0 12px;
+      font-size: clamp(18px, 2.2vw, 22px);
+      color: var(--text-mid);
+    }
+
+    /* Profile block */
+    .profile-list{
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      line-height: 1.75;
+      font-size: clamp(15px, 1.8vw, 18px);
+    }
+
+    /* Recommendations table */
+    .table{
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 8px;
+      font-size: clamp(14px, 1.7vw, 16px);
+    }
+    .table th, .table td{
+      text-align: left;
+      padding: 10px 8px;
+      border-bottom: 1px solid #eef2ef;
+      white-space: nowrap;
+    }
+    .table th{
+      color: var(--muted);
+      font-weight: 700;
+      font-size: .95em;
+    }
+    .chip{
+      display:inline-block;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background:#eef7f3;
+      color: var(--success);
+      font-weight: 700;
+      font-size: .9em;
+    }
+
+    /* Charts block */
+    .charts{
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 18px;
+    }
+    @media (min-width: 780px){
+      .charts{ grid-template-columns: 1fr 1fr; }
+    }
+    .chart-card{
+      background: var(--card-bg);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow);
+      padding: 16px 16px 6px;
+    }
+    .chart-card h4{
+      margin: 6px 8px 12px;
+      font-size: clamp(16px, 1.9vw, 18px);
+      color: var(--text-mid);
+    }
+
+    /* Footer/notes */
+    .notes{
+      margin-top: 10px;
+      color: #6b6b6b;
+      font-size: 13px;
+    }
+
+    .notes-natural-language{
+      margin-top: 10px;
+      color: #1a5b43;
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    /* Loading + error */
+    .status{
+      margin: 16px 0 0;
+      background: #f6fbf9;
+      border: 1px solid #d8efe6;
+      color: #1a5b43;
+      padding: 10px 14px;
+      border-radius: 12px;
+      font-size: 14px;
+    }
+    .error{
+      background: #fff6f6;
+      border-color: #ffd7d7;
+      color: #9c2b2b;
+    }
+    #disclaimer {
+      margin-top: 10px;
+      font-size: 12px;
+      color: #666;
+      text-align: center;
+    }
+    .rec-actions{
+      display:flex;
+      gap:12px;
+      margin-top:14px;
+      flex-wrap:wrap;
+    }
+
+    .btn{
+      appearance:none;
+      border:none;
+      padding:10px 14px;
+      border-radius:12px;
+      font-weight:600;
+      cursor:pointer;
+      box-shadow: 0 2px 6px rgba(0,0,0,.06);
+      width: 300px;
+      font-size: 19px;
+    }
+
+    .btn.action{
+      background:#1b7f5d;
+      color:#fff;
+    }
+    .btn.action:hover{ filter:brightness(0.95); }
+
+    .btn.ghost{
+      background:transparent;
+      border:2px solid #1b7f5d;
+      color:#1b7f5d;
+    }
+    .btn.ghost:hover{
+      background:#eaf4ef;
+    }
+
+    /* Print-friendly: hide buttons, remove heavy styling on print */
+    @media print{
+      .rec-actions, .btn{ display:none !important; }
+      body{
+        background:#fff !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+      .card{
+        box-shadow:none !important;
+        page-break-inside: avoid;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <h1 class="title">Your Investment Profile</h1>
+
+    <div class="grid">
+      <!-- Left: Profile + Charts -->
+      <section>
+        <div class="card" id="profileCard">
+          <h3>👤 Profile Summary</h3>
+          <ul class="profile-list" id="summaryList"></ul>
+          <div class="status" id="statusBox" style="display:none"></div>
+        </div>
+
+        <div class="charts" style="margin-top:22px;">
+          <div class="chart-card">
+            <h4>Allocation by Ticker 🔠</h4>
+            <canvas id="pieAlloc" height="220"></canvas>
+          </div>
+          <div class="chart-card">
+            <h4 style="margin-bottom: 40px;">Probability of Going Up 📈</h4>
+            <canvas id="barProb" height="220"></canvas>
+          </div>
+          <!-- Your Choice -->
+          <div class="chart-card">
+            <h4 id="priceTitleChosen">Recent Price - Your Choice (Your Choice)</h4>
+            <canvas id="linePriceChosen" height="220"></canvas>
+          </div>
+          <!-- Top Pick -->
+          <div class="chart-card">
+            <h4 id="priceTitle">Recent Price - Top Pick (Top Pick)</h4>
+            <canvas id="linePrice" height="220"></canvas>
+          </div>
+        </div>
+      </section>
+
+      <!-- Right: Recommendations -->
+      <aside class="card">
+        <h3>⭐ Recommendations</h3>
+        <div id="recHeader" class="chip">Loading…</div>
+        <table class="table" id="recTable">
+          <thead>
+            <tr>
+              <th>Ticker</th>
+              <th>Close</th>
+              <th>Prob ↑</th>
+              <th>Weight</th>
+              <th>Shares</th>
+            </tr>
+          </thead>
+          <tbody id="recBody"></tbody>
+        </table>
+        <div class="notes" id="cashNote"></div>
+        <br><br>
+        <h3>🤖 Bot Suggestion:</h3>
+        <div class="notes-natural-language" id="nlInsight" style="margin-top:10px;"></div>
+        <br>
+        <div class="notes" id="disclaimer"></div>
+        <br><br>
+        <div class="rec-actions" style="align-items: center; display: flex; justify-content: center;">
+          <button id="btnPrint" class="btn action">Save as PDF</button>
+        </div>
+        <div class="rec-actions" style="align-items: center; display: flex; justify-content: center;">
+          <button id="btnRestart" class="btn ghost">Start Over</button>
+        </div>
+      </aside>
+    </div>
+  </div>
+
+  <script>
+    // Register the plugin properly for Chart.js v4
+    if (window['chartjs-plugin-annotation']) {
+        Chart.register(window['chartjs-plugin-annotation']);
+    }
+
+    // ---------- Helpers ----------
+    const $ = (id) => document.getElementById(id);
+    const fmt = (n, d=2) => Number(n ?? 0).toFixed(d);
+    const fmtPct = (n) => `${(Number(n ?? 0)*100).toFixed(1)}%`;
+    const fmtUSD = (n) => `$${fmt(n, 2)}`;
+
+    // Read URL params (from your existing flow)
+    const params = new URLSearchParams(window.location.search);
+    const payload = {
+      age: params.get("age"),
+      traderType: params.get("traderType"),
+      stockOpt: params.get("stockOpt"),
+      investment_amount: parseFloat(params.get("amount") || "0"),
+      time_horizon: params.get("timeHorizon"),
+      risk_tolerance: params.get("riskOpt"),
+      top_k: 5
+    };
+
+    // Render profile summary
+    const lines = [
+      ["Age", payload.age],
+      ["Trader Type", payload.traderType],
+      ["Stock Option", payload.stockOpt],
+      ["Investment Amount", payload.investment_amount ? fmtUSD(payload.investment_amount) : "—"],
+      ["Time Horizon", payload.time_horizon],
+      ["Risk Strategy", payload.risk_tolerance]
+    ];
+    $("summaryList").innerHTML = lines.map(([k,v]) => `<li><strong>${k}:</strong> ${v ?? "—"}</li>`).join("");
+
+    // Show loading
+    function setStatus(msg, isError=false){
+      const el = $("statusBox");
+      el.textContent = msg;
+      el.className = "status" + (isError ? " error" : "");
+      el.style.display = msg ? "block" : "none";
+    }
+    setStatus("Fetching recommendations…");
+
+    // ---------- Fetch from backend ----------
+    fetch("http://127.0.0.1:8000/api/recommend", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload)
+    })
+    .then(async (res) => {
+      if(!res.ok){
+        const txt = await res.text();
+        throw new Error(`${res.status} ${res.statusText} — ${txt}`);
+      }
+      return res.json();
+    })
+    .then(data => {
+      setStatus(""); // clear loading
+      renderRecommendations(data);
+      renderCharts(data);
+
+      // Fetch and render recent price for top pick
+      const top = data.picks?.[0];
+      if (top) {
+        const titleTop = document.getElementById("priceTitle");
+        if (titleTop) titleTop.textContent = `Recent Price - Top Pick (${top.ticker})`;
+        renderTopPriceLine(top.ticker);
+      }
+
+      // User-chosen ticker from the payload / URL params
+      const chosen = (payload.stockOpt || "").trim();
+      if (chosen) {
+        const titleChosen = document.getElementById("priceTitleChosen");
+        if (titleChosen) titleChosen.textContent = `Recent Price - Chosen (${chosen})`;
+        renderChosenPriceLine(chosen);
+      } else {
+        // hide the second card if nothing was selected
+        const card = document.getElementById("priceChosenCard");
+        if (card) card.style.display = "none";
+      }
+
+      // Render NLP insight
+      const insight = buildInsight(data, payload);
+      document.getElementById("nlInsight").innerHTML = insight;
+    })
+
+    .catch(err => {
+      console.error(err);
+      setStatus("Backend error: " + err.message, true);
+      $("recHeader").textContent = "Error";
+    });
+
+    // ---------- Render: Recommendations ----------
+    function renderRecommendations(data){
+      $("recHeader").textContent = `Top ${data.top_k} Picks (as of ${data.as_of})`;
+
+      const body = data.picks.map(p => `
+        <tr>
+          <td><strong>${p.ticker}</strong></td>
+          <td>${fmtUSD(p.close)}</td>
+          <td style="color:${p.meets_threshold ? 'green' : 'red'}">
+            ${(p.prob_up*100).toFixed(1)}%
+          </td>
+          <td>${fmtPct(p.weight)}</td>
+          <td>${p.shares}</td>   
+        </tr>
+      `).join("");
+
+      $("recBody").innerHTML = body || `<tr><td colspan="5">No picks returned.</td></tr>`;
+      $("cashNote").textContent = `Cash left: ${fmtUSD(data.cash_left)}`;
+      $("disclaimer").textContent = data.notes || "Experimental — educational use only.";
+    }
+
+    // ---------- Render: Charts ----------
+    let pieChart, probChart, lineChart;
+    let lineChartTop;     // for the Top Pick chart (#linePrice)
+    let lineChartChosen;  // for the user's chosen ticker chart (#linePriceChosen)
+
+    function renderCharts(data){
+        const labels = data.picks.map(p => p.ticker);
+        const weights = data.picks.map(p => Number((p.weight ?? 0)*100));
+
+        // --- Donut: allocation incl. cash ---
+        const cashPct = Math.max(0, 100 - weights.reduce((a,b)=>a+b, 0));
+        const allocLabels = [...labels, "Cash"];
+        const allocData = [...weights, cashPct];
+
+        if(pieChart) pieChart.destroy();
+        pieChart = new Chart(document.getElementById("pieAlloc"), {
+            type: "doughnut",
+            data: { labels: allocLabels, datasets: [{ data: allocData }] },
+            options: {
+            cutout: "60%",
+            plugins: {
+                legend: { position: "bottom" },
+                tooltip: { callbacks: { label: (ctx) => `${ctx.label}: ${ctx.parsed.toFixed(1)}%` } }
+            }
+            }
+        });
+
+        // --- Horizontal bars: probability vs threshold ---
+        const probs = data.picks.map(p => Number((p.prob_up ?? 0)*100));
+        const thr = (data.policy_used?.prob_threshold ?? 0.5) * 100;
+
+        // color bars by pass/fail
+        const colors = probs.map(v => v >= thr ? "#1b7f5d" : "#c45252");
+
+        if(probChart) probChart.destroy();
+        probChart = new Chart(document.getElementById("barProb"), {
+            type: "bar",
+            data: {
+            labels,
+            datasets: [{ label: "Prob ↑", data: probs, backgroundColor: colors }]
+            },
+            options: {
+            indexAxis: "y",
+                scales: {
+                    x: { beginAtZero: true, max: 100, ticks: { callback: v => `${v}%` } }
+                },
+                plugins: {
+                    legend: { display: false },
+                    annotation: {
+                    annotations: {
+                        threshold: {
+                        type: "line",
+                        xMin: thr,
+                        xMax: thr,
+                        borderWidth: 2,
+                        borderColor: "#666",
+                        label: { display: true, content: `Threshold ${thr.toFixed(0)}%`, position: "end" }
+                        }
+                    }
+                    },
+                    tooltip: { callbacks: { label: ctx => `${ctx.raw.toFixed(1)}%` } }
+                }
+            }
+        });
+
+        // Hide probability chart if only one pick
+        const probCard = document.getElementById("barProb").closest(".chart-card");
+        probCard.style.display = (data.picks.length < 2) ? "none" : "block";
+    }
+
+    // --- Line chart: recent price for top pick ---
+    function renderTopPriceLine(ticker){
+        fetch(`http://127.0.0.1:8000/api/history?ticker=${encodeURIComponent(ticker)}&days=90`)
+          .then(r => r.json())
+          .then(hist => {
+            const ctx = document.getElementById("linePrice");
+            if (!ctx) return;
+            if (lineChartTop) lineChartTop.destroy();
+            lineChartTop = new Chart(ctx, {
+                type: "line",
+                data: {
+                labels: hist.dates,
+                datasets: [{ label: ticker, data: hist.closes, pointRadius: 0, tension: 0.2 }]
+                },
+                options: {
+                plugins: { legend: { display: false }},
+                scales: {
+                    y: { beginAtZero: false },
+                    x: { ticks: { maxTicksLimit: 6 } }
+                }
+                }
+            });
+            })
+            .catch(e => console.error("History error:", e));
+    }
+
+    function renderChosenPriceLine(ticker){
+      fetch(`http://127.0.0.1:8000/api/history?ticker=${encodeURIComponent(ticker)}&days=90`)
+        .then(r => r.json())
+        .then(hist => {
+          const ctx = document.getElementById("linePriceChosen");
+          if (!ctx) return;
+          if (lineChartChosen) lineChartChosen.destroy();
+          lineChartChosen = new Chart(ctx, {
+            type: "line",
+            data: {
+              labels: hist.dates,
+              datasets: [{ label: ticker, data: hist.closes, pointRadius: 0, tension: 0.2 }]
+            },
+            options: {
+              plugins: { legend: { display: false }},
+              scales: { y: { beginAtZero: false }, x: { ticks: { maxTicksLimit: 6 } } }
+            }
+          });
+        })
+        .catch(e => console.error("History error (chosen):", e));
+    }
+
+    // ---------- Render: NLP Insight ----------
+    function pct(n){ return `${(Number(n)*100).toFixed(1)}%`; }
+    function usd(n){ return `$${Number(n).toFixed(2)}`; }
+
+    function horizonToWords(h){
+        if(!h) return "your selected horizon";
+        h = h.toLowerCase();
+        if (h.includes("short"))  return "the short-term horizon";
+        if (h.includes("medium")) return "the medium-term horizon";
+        if (h.includes("long"))   return "the long-term horizon";
+        return "your selected horizon";
+    }
+
+    // Build a short, dynamic narrative from the API response + user inputs
+    function buildInsight(data, payload){
+        try{
+            const picks = data?.picks ?? [];
+            const top   = picks[0];
+            const pol   = data?.policy_used ?? {};
+            const thr   = Number(pol.prob_threshold ?? 0.50);
+            const meets = top ? (Number(top.prob_up) >= thr) : false;
+
+            const parts = [];
+
+            // 1) What we optimized for
+            const family = (pol.family || payload.risk_tolerance || "technical");
+            const famWord = family[0].toUpperCase() + family.slice(1);
+            parts.push(`Hi there, FrontFin here! I used a '${famWord}' model for '${horizonToWords(payload.time_horizon)}' based on your preferences, and we scored candidates by their probability of increasing.`);
+
+            // 2) Top pick summary vs threshold
+            if (top){
+                parts.push(`Top pick is '${top.ticker}' with '${pct(top.prob_up)}' probability.`);
+                parts.push(`Your trader profile applied a threshold of '${pct(thr)}' — this pick ${meets ? "meets" : "does not meet"} that bar.`);
+            }
+
+            // 3) Sizing & risk policy used (age mapping)
+            const maxW  = pol.max_weight != null ? pct(pol.max_weight) : null;
+            const cb    = pol.cash_buffer != null ? pct(pol.cash_buffer) : null;
+            const wTxt  = maxW ? `max single-name weight ${maxW}` : null;
+            const cbTxt = cb ? `cash buffer ${cb}` : null;
+            const policyBits = [wTxt, cbTxt].filter(Boolean).join(", ");
+            if (policyBits) parts.push(`Furthermore, position sizing followed your risk baseline (${policyBits}).`);
+
+            // 4) Cash comment
+            const cash = Number(data.cash_left || 0);
+            const amt  = Number(payload.investment_amount || 0);
+            if (amt > 0){
+            const cashPct = cash / amt;
+            if (cashPct >= 0.25) {
+                parts.push(`You still have '${usd(cash)} (${pct(cashPct)})' unallocated. Consider adding another ticker or revisiting your threshold.`);
+            } else if (cashPct > 0.05) {
+                parts.push(`'${usd(cash)}' remains as cash for flexibility and risk control.`);
+            }
+            }
+
+            // 5) Diversification hint
+            if (picks.length >= 2){
+                const tickers = picks.map(p=>p.ticker).join(", ");
+                parts.push(`The portfolio currently spans '${picks.length}' names (${tickers}), and the weights are sized to whole shares within policy limits.`);
+            } else {
+                parts.push(`Single-name allocation. Diversifying into 2–3 names can smooth risk if it fits your style.`);
+            }
+
+            // 6) StockOption note, if user pre-selected
+            if (payload.stockOpt && (!top || top.ticker !== payload.stockOpt)){
+                parts.push(`You selected '${payload.stockOpt}' as interest, but current signals favored '${top?.ticker ?? "other names"}'. Thank you for using FrontFin!`);
+            }
+
+            // Join nicely
+            return parts.join(" ");
+        }catch(e){
+            console.warn("Insight build error:", e);
+            return "Personalized insight unavailable due to an unexpected error.";
+        }
+    }
+
+    // Buttons: Save as PDF & Restart
+    document.addEventListener('DOMContentLoaded', () => {
+      const printBtn = document.getElementById('btnPrint');
+      const restartBtn = document.getElementById('btnRestart');
+
+      if (printBtn) {
+        printBtn.addEventListener('click', () => {
+          window.print(); // user picks "Save as PDF"
+        });
+      }
+
+      if (restartBtn) {
+        restartBtn.addEventListener('click', () => {
+          // optional: clear any stored state you used
+          try {
+            sessionStorage.clear();
+            // If you stored anything custom:
+            // localStorage.removeItem('frontfinProfile');
+          } catch (_) {}
+
+          // send user back to your first page
+          window.location.href = 'get-started.html'; // or 'index.html'
+        });
+      }
+    });
+
+    document.getElementById("priceTitle")        // (top pick)
+    document.getElementById("priceTitleChosen")  // (your choice)
+  </script>
+</body>
+</html>

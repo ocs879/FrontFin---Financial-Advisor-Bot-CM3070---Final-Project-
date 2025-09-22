@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Income Information - FrontFin</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a3e2e 0%, #2d5a3d 30%, #4a7c59 60%, #6b9b7c 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .income-container {
+            background: white;
+            padding: 50px 40px;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+            text-align: center;
+            max-width: 550px;
+            width: 100%;
+        }
+
+        .title {
+            font-size: 28px;
+            color: #1a3e2e;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .subtitle {
+            color: #666;
+            font-size: 16px;
+            margin-bottom: 30px;
+            line-height: 1.5;
+        }
+
+        .income-type-selector {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .income-type-btn {
+            background: #f0f8f4;
+            border: 2px solid #2d6a4f;
+            color: #2d6a4f;
+            padding: 12px 24px;
+            border-radius: 25px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .income-type-btn:hover {
+            background: #2d6a4f;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(45, 106, 79, 0.3);
+        }
+
+        .income-type-btn.selected {
+            background: #2d6a4f;
+            color: white;
+        }
+
+        .input-wrapper {
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        .currency-symbol {
+            position: absolute;
+            left: 25px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 24px;
+            font-weight: 700;
+            color: #2d6a4f;
+            z-index: 2;
+        }
+
+        .income-input {
+            width: 100%;
+            padding: 20px 20px 20px 60px;
+            font-size: 24px;
+            font-weight: 600;
+            border: 3px solid #e0e0e0;
+            border-radius: 15px;
+            background: #f8f9fa;
+            color: #1a3e2e;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .income-input:focus {
+            outline: none;
+            border-color: #2d6a4f;
+            background: white;
+            box-shadow: 0 8px 30px rgba(45, 106, 79, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .income-input::placeholder {
+            color: #bbb;
+            font-weight: 400;
+        }
+
+        .frequency-selector {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+        }
+
+        .frequency-btn {
+            background: #f5f5f5;
+            border: 2px solid #ddd;
+            color: #666;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .frequency-btn:hover {
+            border-color: #2d6a4f;
+            color: #2d6a4f;
+        }
+
+        .frequency-btn.selected {
+            background: #2d6a4f;
+            border-color: #2d6a4f;
+            color: white;
+        }
+
+        .income-ranges {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+
+        .income-range-btn {
+            background: #f0f8f4;
+            border: 2px solid #2d6a4f;
+            color: #2d6a4f;
+            padding: 12px 16px;
+            border-radius: 12px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .income-range-btn:hover {
+            background: #2d6a4f;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(45, 106, 79, 0.3);
+        }
+
+        .income-range-btn.selected {
+            background: #2d6a4f;
+            color: white;
+        }
+
+        .income-display {
+            font-size: 16px;
+            color: #2d6a4f;
+            margin-bottom: 15px;
+            font-weight: 600;
+            min-height: 25px;
+        }
+
+        .income-insights {
+            background: #e8f5e8;
+            border: 1px solid #c8e6c9;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 25px;
+            font-size: 14px;
+            color: #2d6a4f;
+            text-align: left;
+        }
+
+        .insight-title {
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: #1a3e2e;
+        }
+
+        .submit-button {
+            background: linear-gradient(135deg, #2d6a4f, #1b4332);
+            color: white;
+            border: none;
+            padding: 18px 50px;
+            font-size: 18px;
+            font-weight: 600;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 25px rgba(45, 106, 79, 0.3);
+            opacity: 0.5;
+            pointer-events: none;
+            width: 100%;
+            max-width: 300px;
+        }
+
+        .submit-button.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .submit-button.active:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 35px rgba(45, 106, 79, 0.4);
+            background: linear-gradient(135deg, #40916c, #2d6a4f);
+        }
+
+        .validation-message {
+            color: #d32f2f;
+            font-size: 14px;
+            margin-top: 10px;
+            min-height: 20px;
+        }
+
+        .info-box {
+            background: #e3f2fd;
+            border: 1px solid #bbdefb;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 25px;
+            font-size: 14px;
+            color: #1565c0;
+        }
+
+        .info-icon {
+            font-size: 16px;
+            margin-right: 8px;
+        }
+
+        @media (max-width: 600px) {
+            .income-container {
+                padding: 30px 25px;
+            }
+
+            .income-input {
+                font-size: 20px;
+                padding: 18px 18px 18px 55px;
+            }
+
+            .currency-symbol {
+                font-size: 20px;
+                left: 20px;
+            }
+
+            .income-type-selector {
+                gap: 8px;
+            }
+
+            .income-type-btn {
+                padding: 10px 18px;
+                font-size: 14px;
+            }
+
+            .income-ranges {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 8px;
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .income-container {
+            animation: fadeInUp 0.6s ease-out;
+        }
+    </style>
+</head>
+<body>
+    <div class="income-container">
+        <h1 class="title">What's Your Income?</h1>
+        <p class="subtitle">This helps us recommend appropriate investment amounts and strategies</p>
+
+        <div class="info-box">
+            <span class="info-icon">🔒</span>
+            Your income information is encrypted and used solely for personalized investment recommendations.
+        </div>
+
+        <div class="income-type-selector">
+            <button class="income-type-btn selected" onclick="selectIncomeType('individual')">Individual Income</button>
+            <button class="income-type-btn" onclick="selectIncomeType('household')">Household Income</button>
+        </div>
+
+        <div class="income-ranges">
+            <button class="income-range-btn" onclick="selectIncomeRange('Under $25k')">Under $25,000</button>
+            <button class="income-range-btn" onclick="selectIncomeRange('$25k-$50k')">$25,000-$50,000</button>
+            <button class="income-range-btn" onclick="selectIncomeRange('$50k-$75k')">$50,000-$75,000</button>
+            <button class="income-range-btn" onclick="selectIncomeRange('$75k-$100k')">$75,000-$100,000</button>
+            <button class="income-range-btn" onclick="selectIncomeRange('$100k-$150k')">$100,000-$150,000</button>
+            <button class="income-range-btn" onclick="selectIncomeRange('$150k-$200k')">$150,000-$200,000</button>
+            <button class="income-range-btn" onclick="selectIncomeRange('$200k-$300k')">$200,000-$300,000</button>
+            <button class="income-range-btn" onclick="selectIncomeRange('Over $300k')">Over $300,000</button>
+        </div>
+
+        <div style="margin: 20px 0; color: #999; font-size: 14px;">OR enter exact amount:</div>
+
+        <div class="input-wrapper">
+            <span class="currency-symbol">$</span>
+            <input 
+                type="number" 
+                id="incomeInput" 
+                class="income-input" 
+                placeholder="Enter annual income"
+                min="0"
+                step="1000"
+                oninput="handleIncomeInput(this)"
+                onkeypress="return isNumberKey(event)"
+            >
+        </div>
+
+        <div class="frequency-selector">
+            <button class="frequency-btn selected" onclick="selectFrequency('annually')" data-multiplier="1">Annually</button>
+            <button class="frequency-btn" onclick="selectFrequency('monthly')" data-multiplier="12">Monthly</button>
+            <button class="frequency-btn" onclick="selectFrequency('weekly')" data-multiplier="52">Weekly</button>
+            <button class="frequency-btn" onclick="selectFrequency('hourly')" data-multiplier="2080">Hourly</button>
+        </div>
+
+        <div class="income-display" id="incomeDisplay"></div>
+        
+        <div class="income-insights" id="incomeInsights" style="display: none;">
+            <div class="insight-title">Investment Recommendations</div>
+            <div id="insightContent"></div>
+        </div>
+
+        <div class="validation-message" id="validationMessage"></div>
+
+        <button 
+            id="submitButton" 
+            class="submit-button" 
+            onclick="submitIncome()"
+        >
+            Continue
+        </button>
+    </div>
+
+    <script>
+        let currentIncomeType = 'individual';
+        let currentFrequency = 'annually';
+        let currentMultiplier = 1;
+
+        function isNumberKey(evt) {
+            var charCode = (evt.which) ? evt.which : evt.keyCode;
+            if (charCode != 46 && charCode > 31 && (charCode < 48 || charCode > 57)) {
+                return false;
+            }
+            return true;
+        }
+
+        function formatCurrency(amount) {
+            return new Intl.NumberFormat('en-US', {
+                style: 'currency',
+                currency: 'USD',
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 0
+            }).format(amount);
+        }
+
+        function selectIncomeType(type) {
+            currentIncomeType = type;
+            document.querySelectorAll('.income-type-btn').forEach(btn => {
+                btn.classList.remove('selected');
+            });
+            event.target.classList.add('selected');
+            
+            // Update insights if income is selected
+            const incomeInput = document.getElementById('incomeInput');
+            if (incomeInput.value || incomeInput.dataset.selectedRange) {
+                updateIncomeInsights();
+            }
+        }
+
+        function selectFrequency(frequency) {
+            currentFrequency = frequency;
+            currentMultiplier = parseFloat(event.target.dataset.multiplier);
+            
+            document.querySelectorAll('.frequency-btn').forEach(btn => {
+                btn.classList.remove('selected');
+            });
+            event.target.classList.add('selected');
+            
+            // Recalculate if there's an input value
+            const incomeInput = document.getElementById('incomeInput');
+            if (incomeInput.value) {
+                handleIncomeInput(incomeInput);
+            }
+        }
+
+        function selectIncomeRange(range) {
+            // Clear previous selections
+            document.querySelectorAll('.income-range-btn').forEach(btn => {
+                btn.classList.remove('selected');
+            });
+            event.target.classList.add('selected');
+            
+            // Clear manual input
+            const incomeInput = document.getElementById('incomeInput');
+            incomeInput.value = '';
+            incomeInput.dataset.selectedRange = range;
+            
+            // Update display
+            const incomeDisplay = document.getElementById('incomeDisplay');
+            const incomeType = currentIncomeType === 'individual' ? 'Individual' : 'Household';
+            incomeDisplay.textContent = `${incomeType} Income: ${range} annually`;
+            
+            // Show insights
+            updateIncomeInsights(range);
+            
+            // Clear validation message
+            document.getElementById('validationMessage').textContent = '';
+            
+            // Enable submit button
+            document.getElementById('submitButton').classList.add('active');
+        }
+
+        function handleIncomeInput(input) {
+            const submitButton = document.getElementById('submitButton');
+            const incomeDisplay = document.getElementById('incomeDisplay');
+            const validationMessage = document.getElementById('validationMessage');
+            
+            // Clear range selection
+            document.querySelectorAll('.income-range-btn').forEach(btn => {
+                btn.classList.remove('selected');
+            });
+            delete input.dataset.selectedRange;
+            
+            let value = parseFloat(input.value);
+            
+            // Clear previous messages
+            validationMessage.textContent = '';
+            incomeDisplay.textContent = '';
+            document.getElementById('incomeInsights').style.display = 'none';
+            
+            if (!input.value || input.value === '') {
+                submitButton.classList.remove('active');
+                return;
+            }
+            
+            // Validation
+            if (isNaN(value) || value < 0) {
+                validationMessage.textContent = 'Please enter a valid income amount';
+                submitButton.classList.remove('active');
+                return;
+            }
+            
+            if (value > 10000000) {
+                validationMessage.textContent = 'Please enter a realistic income amount';
+                submitButton.classList.remove('active');
+                return;
+            }
+            
+            // Calculate annual income based on frequency
+            let annualIncome = value * currentMultiplier;
+            
+            // Show formatted amount
+            const incomeType = currentIncomeType === 'individual' ? 'Individual' : 'Household';
+            const frequencyText = currentFrequency === 'annually' ? 'annually' : 
+                                 currentFrequency === 'monthly' ? 'per month' :
+                                 currentFrequency === 'weekly' ? 'per week' : 'per hour';
+            
+            incomeDisplay.textContent = `${incomeType} Income: ${formatCurrency(value)} ${frequencyText} (${formatCurrency(annualIncome)} annually)`;
+            
+            // Show insights
+            updateIncomeInsights(null, annualIncome);
+            
+            submitButton.classList.add('active');
+        }
+
+        function updateIncomeInsights(range, annualIncome) {
+            const insightsContainer = document.getElementById('incomeInsights');
+            const insightContent = document.getElementById('insightContent');
+            
+            let income = annualIncome;
+            if (range) {
+                // Estimate income from range
+                const rangeMap = {
+                    'Under $25k': 20000,
+                    '$25k-$50k': 37500,
+                    '$50k-$75k': 62500,
+                    '$75k-$100k': 87500,
+                    '$100k-$150k': 125000,
+                    '$150k-$200k': 175000,
+                    '$200k-$300k': 250000,
+                    'Over $300k': 350000
+                };
+                income = rangeMap[range];
+            }
+            
+            let insight = '';
+            let recommendedInvestment = '';
+            
+            if (income < 30000) {
+                insight = 'Focus on building an emergency fund first, then start with small, regular investments. Consider low-cost index funds and employer 401(k) matching.';
+                recommendedInvestment = 'Start with $25-$100/month';
+            } else if (income < 60000) {
+                insight = 'Great foundation for investing! Aim to invest 10-15% of income. Prioritize tax-advantaged accounts and diversified portfolios.';
+                recommendedInvestment = 'Target: $300-$750/month';
+            } else if (income < 100000) {
+                insight = 'Excellent position for wealth building. Consider maxing out retirement accounts and exploring taxable investment accounts.';
+                recommendedInvestment = 'Target: $750-$1,500/month';
+            } else if (income < 200000) {
+                insight = 'High earning potential allows for aggressive wealth building. Consider tax optimization strategies and diverse investment vehicles.';
+                recommendedInvestment = 'Target: $1,500-$3,000/month';
+            } else {
+                insight = 'Excellent position for comprehensive wealth management. Consider advanced strategies like tax-loss harvesting and alternative investments.';
+                recommendedInvestment = 'Target: $3,000+/month';
+            }
+            
+            insightContent.innerHTML = `
+                <div style="margin-bottom: 8px;">${insight}</div>
+                <div style="font-weight: 600; color: #2d6a4f;">${recommendedInvestment}</div>
+            `;
+            
+            insightsContainer.style.display = 'block';
+        }
+
+        function submitIncome() {
+            const incomeInput = document.getElementById('incomeInput');
+            const submitButton = document.getElementById('submitButton');
+            
+            if (!submitButton.classList.contains('active')) {
+                return;
+            }
+            
+            let incomeData = {
+                incomeType: currentIncomeType,
+                frequency: currentFrequency
+            };
+            
+            if (incomeInput.value) {
+                // Exact amount entered
+                const amount = parseFloat(incomeInput.value);
+                const annualAmount = amount * currentMultiplier;
+                
+                incomeData.exactAmount = amount;
+                incomeData.annualAmount = annualAmount;
+                incomeData.inputFrequency = currentFrequency;
+            } else if (incomeInput.dataset.selectedRange) {
+                // Range selected
+                incomeData.incomeRange = incomeInput.dataset.selectedRange;
+            }
+            
+            // Here you can add your logic to handle the income data
+            console.log('Income Data:', incomeData);
+            
+            const displayText = incomeData.exactAmount ? 
+                formatCurrency(incomeData.annualAmount) + ' annually' : 
+                incomeData.incomeRange;
+            
+            alert(`Income Information Submitted: ${displayText} (${incomeData.incomeType})`);
+            
+            // Example: Redirect to next page with income data
+            // window.location.href = `age.html?income=${encodeURIComponent(JSON.stringify(incomeData))}`;
+            
+            // Example: Store in sessionStorage
+            // sessionStorage.setItem('userIncome', JSON.stringify(incomeData));
+            
+            // Example: Send to API
+            // fetch('/api/user-income', {
+            //     method: 'POST',
+            //     headers: { 'Content-Type': 'application/json' },
+            //     body: JSON.stringify(incomeData)
+            // });
+        }
+
+        // Add Enter key support
+        document.getElementById('incomeInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                submitIncome();
+            }
+        });
+
+        // Clear range selection when user starts typing
+        document.getElementById('incomeInput').addEventListener('input', function() {
+            if (this.value) {
+                document.querySelectorAll('.income-range-btn').forEach(btn => {
+                    btn.classList.remove('selected');
+                });
+                delete this.dataset.selectedRange;
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,123 @@
+:root {
+  --primary-color: #0078d4;
+  --accent-color: #f0f4f8;
+  --text-color: #2c3e50;
+  --border-radius: 8px;
+  --transition-speed: 0.3s;
+}
+
+body {
+  margin: 0;
+  font-family: 'Segoe UI', sans-serif;
+  background-color: var(--accent-color);
+  color: var(--text-color);
+}
+
+.container {
+  max-width: 600px;
+  margin: 60px auto;
+  padding: 20px;
+  background: white;
+  border-radius: var(--border-radius);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  transition: all var(--transition-speed) ease-in-out;
+}
+
+h1, h2 {
+  margin-bottom: 10px;
+}
+
+p {
+  margin-bottom: 20px;
+}
+
+.primary-btn {
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  padding: 12px 20px;
+  border-radius: var(--border-radius);
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color var(--transition-speed);
+}
+
+.primary-btn:hover {
+  background-color: #005fa3;
+}
+
+.secondary-btn {
+  background-color: #e0e0e0;
+  color: #333;
+  border: none;
+  padding: 10px 16px;
+  border-radius: var(--border-radius);
+  cursor: pointer;
+  font-size: 15px;
+  margin-top: 20px;
+  transition: background-color var(--transition-speed);
+}
+
+.secondary-btn:hover {
+  background-color: #cfcfcf;
+}
+
+.panel {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity var(--transition-speed), transform var(--transition-speed);
+}
+
+.panel.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.hidden {
+  display: none;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+input, select {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: var(--border-radius);
+  font-size: 16px;
+}
+
+.results {
+  margin-top: 20px;
+  padding: 15px;
+  background-color: #eaf6ff;
+  border-left: 4px solid var(--primary-color);
+  border-radius: var(--border-radius);
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.welcome-card {
+    animation: fadeInUp 0.8s ease-out;
+}
+
+.logo-container {
+    animation: fadeInUp 0.6s ease-out;
+}

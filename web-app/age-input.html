@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FrontFin - Age Input</title>
+    <link rel="icon" href="img/favicon-frontfin.png" type="image/x-icon">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a3e2e 0%, #2d5a3d 30%, #4a7c59 60%, #6b9b7c 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .age-container {
+            background: white;
+            padding: 50px 40px;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+            text-align: center;
+            max-width: 500px;
+            width: 100%;
+        }
+
+        .title {
+            font-size: 28px;
+            color: #1a3e2e;
+            margin-bottom: 10px;
+            font-weight: 900;
+        }
+
+        .subtitle {
+            color: #666;
+            font-size: 16px;
+            margin-bottom: 30px;
+            line-height: 1.5;
+        }
+
+        .input-wrapper {
+            position: relative;
+            margin-bottom: 30px;
+        }
+
+        .age-input {
+            width: 100%;
+            padding: 20px 25px;
+            font-size: 28px;
+            font-weight: 600;
+            border: 3px solid #e0e0e0;
+            border-radius: 15px;
+            text-align: center;
+            background: #f8f9fa;
+            color: #1a3e2e;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .age-input:focus {
+            outline: none;
+            border-color: #2d6a4f;
+            background: white;
+            box-shadow: 0 8px 30px rgba(45, 106, 79, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .age-input::placeholder {
+            color: #bbb;
+            font-weight: 500;
+            font-size: 23px;
+            font-style: italic;
+        }
+
+        .age-display {
+            font-size: 18px;
+            color: #2d6a4f;
+            margin-top: 15px;
+            font-weight: 600;
+            min-height: 25px;
+        }
+
+        .age-ranges {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .age-range-btn {
+            background: #f0f8f4;
+            border: 2px solid #2d6a4f;
+            color: #2d6a4f;
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .age-range-btn:hover {
+            background: #2d6a4f;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(45, 106, 79, 0.3);
+        }
+
+        .age-range-btn.selected {
+            background: #2d6a4f;
+            color: white;
+        }
+
+        .submit-button {
+            background: linear-gradient(135deg, #2d6a4f, #1b4332);
+            color: white;
+            border: none;
+            padding: 18px 50px;
+            font-size: 18px;
+            font-weight: 600;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 25px rgba(45, 106, 79, 0.3);
+            opacity: 0.5;
+            pointer-events: none;
+            width: 100%;
+            max-width: 300px;
+        }
+
+        .submit-button.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .submit-button.active:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 35px rgba(45, 106, 79, 0.4);
+            background: linear-gradient(135deg, #40916c, #2d6a4f);
+        }
+
+        .validation-message {
+            color: #d32f2f;
+            font-size: 14px;
+            margin-top: 10px;
+            min-height: 20px;
+        }
+
+        .info-box {
+            background: #e8f5e8;
+            border: 1px solid #c8e6c9;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 30px;
+            font-size: 14px;
+            color: #2d6a4f;
+        }
+
+        .info-icon {
+            font-size: 16px;
+            margin-right: 8px;
+        }
+
+        @media (max-width: 600px) {
+            .age-container {
+                padding: 30px 25px;
+            }
+
+            .age-input {
+                font-size: 24px;
+                padding: 18px 20px;
+            }
+
+            .age-ranges {
+                gap: 8px;
+            }
+
+            .age-range-btn {
+                padding: 8px 15px;
+                font-size: 13px;
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .age-container {
+            animation: fadeInUp 0.6s ease-out;
+        }
+
+        .age-category {
+            font-size: 16px;
+            color: #2d6a4f;
+            font-weight: 600;
+            margin-top: 10px;
+            padding: 10px;
+            background: #f0f8f4;
+            border-radius: 8px;
+            border: 1px solid #c8e6c9;
+        }
+    </style>
+</head>
+<body>
+    <div class="age-container">
+        <h1 class="title">What's Your Age?</h1>
+        <p class="subtitle">Help us tailor investment strategies based on your age and risk profile</p>
+
+        <div class="info-box">
+            <span class="info-icon">🔒</span>
+            Your age information is used to customize investment recommendations and is kept strictly confidential.
+        </div>
+
+        <div class="age-ranges">
+            <button class="age-range-btn" onclick="selectAgeRange('18-25')">18-25</button>
+            <button class="age-range-btn" onclick="selectAgeRange('26-35')">26-35</button>
+            <button class="age-range-btn" onclick="selectAgeRange('36-50')">36-50</button>
+            <button class="age-range-btn" onclick="selectAgeRange('51-65')">51-65</button>
+            <button class="age-range-btn" onclick="selectAgeRange('65+')">65+</button>
+        </div>
+
+        <div class="input-wrapper">
+            <input 
+                type="number" 
+                id="ageInput" 
+                class="age-input" 
+                placeholder="Enter your age"
+                min="18"
+                max="100"
+                oninput="handleAgeInput(this)"
+                onkeypress="return isNumberKey(event)"
+            >
+        </div>
+
+        <div class="age-display" id="ageDisplay"></div>
+        <div class="age-category" id="ageCategory" style="display: none;"></div>
+        <div class="validation-message" id="validationMessage"></div>
+
+        <button 
+            id="submitButton" 
+            class="submit-button" 
+            onclick="submitAge()"
+        >
+            Continue
+        </button>
+    </div>
+
+    <script>
+        function isNumberKey(evt) {
+            var charCode = (evt.which) ? evt.which : evt.keyCode;
+            // Only allow numbers, no decimals for age
+            if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+                return false;
+            }
+            return true;
+        }
+
+        function getAgeCategory(age) {
+            if (age >= 18 && age <= 25) return "Young Adult - High Growth Potential";
+            if (age >= 26 && age <= 35) return "Early Career - Growth Focused";
+            if (age >= 36 && age <= 50) return "Mid Career - Balanced Approach";
+            if (age >= 51 && age <= 65) return "Pre-Retirement - Conservative Growth";
+            if (age >= 66) return "Retirement - Income Focused";
+            return "";
+        }
+
+        function getRiskProfile(age) {
+            if (age >= 18 && age <= 35) return "Higher risk tolerance suitable for aggressive growth strategies";
+            if (age >= 36 && age <= 50) return "Moderate risk profile with balanced growth and stability";
+            if (age >= 51 && age <= 65) return "Conservative approach focusing on capital preservation";
+            if (age >= 66) return "Low risk profile prioritizing steady income and security";
+            return "";
+        }
+
+        function handleAgeInput(input) {
+            const submitButton = document.getElementById('submitButton');
+            const ageDisplay = document.getElementById('ageDisplay');
+            const ageCategory = document.getElementById('ageCategory');
+            const validationMessage = document.getElementById('validationMessage');
+            
+            let value = parseInt(input.value);
+            
+            // Clear previous messages
+            validationMessage.textContent = '';
+            ageDisplay.textContent = '';
+            ageCategory.style.display = 'none';
+            
+            // Clear age range selection
+            clearAgeRangeSelection();
+            
+            if (!input.value || input.value === '') {
+                submitButton.classList.remove('active');
+                return;
+            }
+            
+            // Validation
+            if (isNaN(value) || value <= 0) {
+                validationMessage.textContent = 'Please enter a valid age';
+                submitButton.classList.remove('active');
+                return;
+            }
+            
+            if (value < 18) {
+                validationMessage.textContent = 'You must be at least 18 years old to invest';
+                submitButton.classList.remove('active');
+                return;
+            }
+            
+            if (value > 100) {
+                validationMessage.textContent = 'Please enter a valid age';
+                submitButton.classList.remove('active');
+                return;
+            }
+            
+            // Show age category and info
+            const category = getAgeCategory(value);
+            ageDisplay.textContent = `Age: ${value} years old`;
+            
+            if (category) {
+                ageCategory.textContent = category;
+                ageCategory.style.display = 'block';
+            }
+            
+            submitButton.classList.add('active');
+        }
+
+        function selectAgeRange(range) {
+            // Clear previous selection
+            clearAgeRangeSelection();
+            
+            // Mark selected button
+            event.target.classList.add('selected');
+            
+            const ageInput = document.getElementById('ageInput');
+            const ageDisplay = document.getElementById('ageDisplay');
+            const ageCategory = document.getElementById('ageCategory');
+            const validationMessage = document.getElementById('validationMessage');
+            
+            // Clear validation message
+            validationMessage.textContent = '';
+            
+            // Set display based on range
+            ageInput.value = '';
+            ageDisplay.textContent = `Selected Age Range: ${range}`;
+            
+            let categoryText = '';
+            switch(range) {
+                case '18-25':
+                    categoryText = 'Young Adult - High Growth Potential';
+                    break;
+                case '26-35':
+                    categoryText = 'Early Career - Growth Focused';
+                    break;
+                case '36-50':
+                    categoryText = 'Mid Career - Balanced Approach';
+                    break;
+                case '51-65':
+                    categoryText = 'Pre-Retirement - Conservative Growth';
+                    break;
+                case '65+':
+                    categoryText = 'Retirement - Income Focused';
+                    break;
+            }
+            
+            ageCategory.textContent = categoryText;
+            ageCategory.style.display = 'block';
+            
+            // Store the range for submission
+            ageInput.dataset.ageRange = range;
+            
+            document.getElementById('submitButton').classList.add('active');
+        }
+
+        function clearAgeRangeSelection() {
+            document.querySelectorAll('.age-range-btn').forEach(btn => {
+                btn.classList.remove('selected');
+            });
+        }
+
+        function submitAge() {
+            const ageInput = document.getElementById('ageInput');
+            const submitButton = document.getElementById('submitButton');
+            
+            if (!submitButton.classList.contains('active')) {
+                return;
+            }
+            
+            let ageData = {};
+            
+            if (ageInput.value) {
+                // Specific age entered
+                const age = parseInt(ageInput.value);
+                ageData = {
+                    age: age,
+                    ageRange: getAgeRangeFromAge(age),
+                    category: getAgeCategory(age),
+                    riskProfile: getRiskProfile(age)
+                };
+            } else if (ageInput.dataset.ageRange) {
+                // Age range selected
+                ageData = {
+                    ageRange: ageInput.dataset.ageRange,
+                    category: document.getElementById('ageCategory').textContent
+                };
+            }
+
+            // ✅ Instead of alert, redirect with query string
+            const params = new URLSearchParams(window.location.search);
+            if (ageData.age) {
+                params.set("age", ageData.age);
+            } else if (ageData.ageRange) {
+                params.set("age", ageData.ageRange);
+            }
+
+            // Go to the next step (investment amount for example)
+            window.location.href = `trader-type.html?${params.toString()}`;
+        }
+
+        function getAgeRangeFromAge(age) {
+            if (age >= 18 && age <= 25) return '18-25';
+            if (age >= 26 && age <= 35) return '26-35';
+            if (age >= 36 && age <= 50) return '36-50';
+            if (age >= 51 && age <= 65) return '51-65';
+            if (age >= 66) return '65+';
+            return '';
+        }
+
+        // Add Enter key support
+        document.getElementById('ageInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                submitAge();
+            }
+        });
+
+        // Clear age range selection when user starts typing
+        document.getElementById('ageInput').addEventListener('input', function() {
+            if (this.value) {
+                clearAgeRangeSelection();
+                delete this.dataset.ageRange;
+            }
+        });
+    </script>
+</body>
+</html>
