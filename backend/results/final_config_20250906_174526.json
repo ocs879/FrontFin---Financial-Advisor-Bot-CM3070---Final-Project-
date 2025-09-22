@@ -1,0 +1,33 @@
+{
+  "version": "2025-08-30",
+  "universe": [
+    "AAPL",
+    "MSFT",
+    "GOOGL",
+    "AMZN",
+    "TSLA"
+  ],
+  "prices": {
+    "start": "2010-01-01",
+    "end": null,
+    "interval": "1d"
+  },
+  "strategy": {
+    "fast": 10,
+    "slow": 100,
+    "target_vol_annual": 0.15,
+    "trade_band": 0.02,
+    "hysteresis": 0.002,
+    "allow_short": false,
+    "max_pos": 1.0
+  },
+  "exec": {
+    "commission": 0.001,
+    "slippage": 0.0005,
+    "initial_capital": 100000
+  },
+  "portfolio": {
+    "top_k": 5,
+    "max_weight": 0.25
+  }
+}
